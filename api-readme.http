@@ -1,0 +1,35 @@
+POST {{host}}/api/add_dict
+Content-Type: application/json
+
+{"id": "6", "name": "频率", "code": "pinlv", "state": 0}
+
+###
+POST {{host}}/api/delete_dict
+Content-Type: application/json
+
+{"id": "6"}
+
+###
+POST {{host}}/api/update_dict
+Content-Type: application/json
+
+{"id": "3", "code": "pici2"}
+
+###
+POST {{host}}/api/query_dict
+Content-Type: application/json
+
+{"code": "shuliang"}
+
+###
+POST {{host}}/api/query_dict_page
+Content-Type: application/json
+
+{"page_no": 1, "page_size": 3}
+
+###
+GET {{host}}/api/query_dict_by_id/1
+Content-Type: application/json
+
+
+
