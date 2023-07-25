@@ -3,7 +3,7 @@ pub mod entity;
 pub mod mapper;
 
 use std::sync::Arc;
-use axum::{routing::post, Router, ServiceExt};
+use axum::{routing::post, Router};
 use axum::routing::get;
 use rbatis::RBatis;
 

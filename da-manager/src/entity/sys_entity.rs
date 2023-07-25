@@ -1,4 +1,4 @@
-use rbatis::{crud, impl_select, impl_select_page, impl_update};
+use rbatis::{crud, impl_select, impl_select_page};
 use rbatis::rbdc::datetime::DateTime;
 use serde::{Deserialize, Serialize};
 

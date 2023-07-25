@@ -4,7 +4,6 @@ use std::sync::Arc;
 use axum::extract::{Path, State};
 use axum::Json;
 use axum::response::IntoResponse;
-use futures_util::TryFutureExt;
 use once_cell::sync::Lazy;
 use rbatis::{crud, impl_select, RBatis};
 use rbatis::rbdc::datetime::DateTime;
@@ -23,6 +22,7 @@ impl_select!(SysUser{select_by_id(id:String) -> Option => "`where id = #{id} lim
 
 // curl localhost:8080/api/user_save -X POST -d '{"mobile": "bb", "password": "apple"}' --header "Content-Type: application/json"
 pub async fn user_save(Json(payload): Json<SysUser>) -> impl IntoResponse {
+    log::info!("Sysuser : {:?}", payload);
     RB.link(MysqlDriver{},"mysql://root:123456@localhost:3306/dppee").await.unwrap();
 
     let user = SysUser{
