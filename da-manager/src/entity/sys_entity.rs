@@ -45,11 +45,11 @@ pub struct SysDict {
     pub state: Option<i32>,
     pub create_date: Option<DateTime>,
 }
-crud!(SysDict {});
-impl_select_page!(SysDict{select_page() =>"
-     if !sql.contains('count'):
-       order by create_date desc"});
-impl_select!(SysDict{select_by_id(id:String) -> Option => "`where id = #{id} limit 1`"});
+// crud!(SysDict {});
+// impl_select_page!(SysDict{select_page() =>"
+//      if !sql.contains('count'):
+//        order by create_date desc"});
+// impl_select!(SysDict{select_by_id(id:String) -> Option => "`where id = #{id} limit 1`"});
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct DictEditDTO {
