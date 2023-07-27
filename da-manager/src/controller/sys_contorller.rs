@@ -27,6 +27,7 @@ impl_select!(SysUser{select_by_id(id:String) -> Option => "`where id = #{id} lim
 // curl localhost:8080/api/user_save -X POST -d '{"mobile": "bb", "password": "apple"}' --header "Content-Type: application/json"
 pub async fn user_list(Json(payload): Json<SysUser>) -> impl IntoResponse {
 
+
     // 使用相对路径读取 app.yaml 内容为字符串
     let content = read_to_string("application.yml").await.unwrap();
     // serde_yaml 解析字符串为 User 对象

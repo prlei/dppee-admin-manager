@@ -1,4 +1,5 @@
 use getset::{Getters, MutGetters, Setters};
+use tokio::fs::read_to_string;
 
 #[derive(Debug, PartialEq, serde::Serialize, serde::Deserialize, Clone, Getters, Setters)]
 #[getset(get_mut = "pub", get = "pub", set = "pub")]
@@ -33,5 +34,19 @@ impl ApplicationConfig {
         if self.database_url.is_empty() {
             panic!("请配置database_url ！！！！！！！！！！！！！！！！！！！")
         }
+    }
+}
+
+impl Default for ApplicationConfig {
+    fn default() -> Self {
+        let content = read_to_string("application.yml");
+        let result = ApplicationConfig::new(content.as_str());
+        if result.debug {
+            println!("[abs_admin] load config:{:?}", result);
+            println!("[abs_admin] ///////////////////// Start On Debug Mode ////////////////////////////");
+        } else {
+            println!("[abs_admin] ///////////////////// Start On Release Mode ////////////////////////////");
+        }
+        result
     }
 }

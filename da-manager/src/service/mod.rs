@@ -4,7 +4,7 @@ use crate::service::sys_dist_service::SysDictService;
 
 pub mod sys_dist_service;
 
-pub static APPLICATION_CONTEXT: Lazy<ServiceContext> = Lazy::new(|| ServiceContext::default());
+pub static APPLICATION_CONTEXT22222: Lazy<ServiceContext> = Lazy::new(|| ServiceContext::default());
 
 #[macro_export]
 macro_rules! pool {
