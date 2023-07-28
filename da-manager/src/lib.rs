@@ -14,12 +14,26 @@ pub mod service;
 pub mod errors;
 pub mod utils;
 
-pub struct AppState {
-    pub batis: RBatis,
-}
 
 //----
 pub static CONTEXT: Container![Send + Sync] = <Container![Send + Sync]>::new();
+
+pub struct AppState {
+    pub batis: RBatis,
+}
+pub fn init_db() -> RBatis {
+    let rb = RBatis::new();
+    rb.init(rbdc_mysql::driver::MysqlDriver {}, "mysql://root:rootroot@127.0.0.1:3306/dppee").unwrap();
+    // let shared_state = CONTEXT.get::<Arc<AppState>>();
+    return rb;
+}
+
+#[macro_export]
+macro_rules! pool {
+    () => {
+        &mut $crate::init_db()
+    };
+}
 
 /*初始化环境上下文*/
 pub async fn init_context() {
@@ -59,3 +73,4 @@ pub async fn get_server() -> String {
 pub async fn init_service() {
     CONTEXT.set::<ServiceContext>(ServiceContext::default());
 }
+

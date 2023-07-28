@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use rbatis::sql::{Page, PageRequest};
-use crate::{AppState, CONTEXT};
+use crate::{AppState, CONTEXT, pool};
 
 use crate::controller::vo::dict_vo::DictPageVO;
 use crate::entity::dto::dict::SysDictDTO;
@@ -12,9 +12,10 @@ pub struct SysDictService {}
 
 impl SysDictService {
     pub async fn page(&self, arg: &DictPageVO) -> Result<Page<SysDictDTO>> {
+        println!("{:?}", pool!());
         let state = CONTEXT.get::<Arc<AppState>>();
         let mut rb = &state.batis;
-        let data = SysDict::select_page(&mut rb, &PageRequest::new(arg.page_no.unwrap_or(1), arg.page_size.unwrap_or(10))).await?;
+        let data = SysDict::select_page(pool!(), &PageRequest::new(arg.page_no.unwrap_or(1), arg.page_size.unwrap_or(10))).await?;
         let page = Page::<SysDictDTO>::from(data);
         Ok(page)
     }
