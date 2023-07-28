@@ -10,6 +10,7 @@ use crate::CONTEXT;
 use crate::controller::vo::dict_vo::DictPageVO;
 use crate::entity::sys_entity::{DictEditDTO, SysDict};
 use crate::service::ServiceContext;
+use crate::utils::result_body::ResultBody;
 
 // dict start
 
@@ -59,6 +60,12 @@ pub async fn delete_dict(item: Json<DictEditDTO>) -> impl IntoResponse {
 
 // dict end
 
+
+pub async fn test(Json(item): Json<DictPageVO>) -> impl IntoResponse {
+    let service_context = CONTEXT.get::<ServiceContext>();
+    let sys_dict = service_context.sys_dict_service.find_dict(&item).await;
+    ResultBody::from_result(&sys_dict).resp_json()
+}
 
 
 //
@@ -119,6 +126,7 @@ pub async fn delete_dict(item: Json<DictEditDTO>) -> impl IntoResponse {
 pub fn init_router() -> Router {
     Router::new()
         // .route("/user_list", post(user_list))
+        .route("/test", post(test))
         .route("/query_dict_page", post(query_dict_page))
         .route("/query_dict_by_id/:id", get(query_dict_by_id))
         .route("/query_dict", post(query_dict))

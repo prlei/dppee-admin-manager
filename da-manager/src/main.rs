@@ -1,17 +1,11 @@
 use axum::Router;
 
-use da_manager::{CONTEXT, controller, init_context};
-use da_manager::entity::config::ApplicationConfig;
+use da_manager::{controller, get_server, init_context};
 
 #[tokio::main]
 async fn main() {
     init_context().await;
-    let config = CONTEXT.get::<ApplicationConfig>();
-    let server = format!(
-        "{}:{}",
-        config.server().host(),
-        config.server().port()
-    );
+    let server = get_server().await;
     let app = Router::new()
         .nest("/api", controller::sys_contorller::init_router()
         );

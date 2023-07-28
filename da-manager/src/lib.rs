@@ -12,7 +12,7 @@ pub mod entity;
 pub mod mapper;
 pub mod service;
 pub mod errors;
-
+pub mod utils;
 
 pub struct AppState {
     pub batis: RBatis,
@@ -44,6 +44,16 @@ pub async fn init_database() {
     rb.init(rbdc_mysql::driver::MysqlDriver {}, config.database_url()).unwrap();
     let shared_state = Arc::new(AppState { /* ... */ batis: rb.clone() });
     CONTEXT.set::<Arc<AppState>>(shared_state);
+}
+
+pub async fn get_server() -> String {
+    let config = CONTEXT.get::<ApplicationConfig>();
+    let server = format!(
+        "{}:{}",
+        config.server().host(),
+        config.server().port()
+    );
+    return server;
 }
 
 pub async fn init_service() {
