@@ -1,37 +1,9 @@
-pub mod controller;
-pub mod entity;
-pub mod mapper;
-pub mod service;
-pub mod errors;
+use axum::{Router, routing::post};
 
-use std::sync::Arc;
-use axum::{routing::post, Router};
-use axum::routing::get;
-use once_cell::sync::{Lazy, OnceCell};
-use rbatis::RBatis;
-use tokio::fs::read_to_string;
-use state::Container;
-use da_manager::init_context;
-use crate::entity::config::ApplicationConfig;
-use crate::service::ServiceContext;
-use crate::service::sys_dist_service::SysDictService;
-
-
-pub struct AppState {
-    pub batis: RBatis,
-}
-
-pub async fn init_db() -> RBatis {
-    let rb = RBatis::new();
-    rb.init(rbdc_mysql::driver::MysqlDriver {}, "mysql://root:rootroot@127.0.0.1:3306/dppee").unwrap();
-    return rb;
-}
-
+use da_manager::controller;
 
 #[tokio::main]
 async fn main() {
-
-    init_context().await;
 
     // let rb = init_db().await;
     // let shared_state = Arc::new(AppState { /* ... */ batis: rb.clone() });

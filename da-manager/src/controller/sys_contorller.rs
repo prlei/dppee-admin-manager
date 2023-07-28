@@ -1,23 +1,17 @@
 use std::string::String;
-use std::sync::Arc;
 
-use axum::extract::{Path, State};
 use axum::Json;
 use axum::response::IntoResponse;
 use once_cell::sync::Lazy;
 use rbatis::{crud, impl_select, RBatis};
 use rbatis::rbdc::datetime::DateTime;
-use rbatis::sql::PageRequest;
-use rbdc_mysql::driver::MysqlDriver;
 use serde_json::json;
 use tokio::fs::read_to_string;
 
-use crate::{AppState, CONTEXT};
+use crate::{APPLICATION_CONTEXT, pool};
 use crate::controller::vo::dict_vo::DictPageVO;
 use crate::entity::config::ApplicationConfig;
-use crate::entity::sys_entity::{DictEditDTO, SysDict, SysUser, SysUserQuery};
-use crate::service::{APPLICATION_CONTEXT, ServiceContext};
-use crate::service::sys_dist_service::SysDictService;
+use crate::entity::sys_entity::SysUser;
 
 pub static RB: Lazy<RBatis> = Lazy::new(|| RBatis::new());
 
@@ -27,16 +21,14 @@ impl_select!(SysUser{select_by_id(id:String) -> Option => "`where id = #{id} lim
 // curl localhost:8080/api/user_save -X POST -d '{"mobile": "bb", "password": "apple"}' --header "Content-Type: application/json"
 pub async fn user_list(Json(payload): Json<SysUser>) -> impl IntoResponse {
 
-
     // 使用相对路径读取 app.yaml 内容为字符串
     let content = read_to_string("application.yml").await.unwrap();
     // serde_yaml 解析字符串为 User 对象
     let config: ApplicationConfig = ApplicationConfig::new(content.as_str());
 
-    let state = CONTEXT.get::<AppState>();
+    let state = &APPLICATION_CONTEXT.rb;
 
-    println!("config ---->  {:?}", &state.batis);
-
+    println!("config ---->  {:?}", &state);
 
     log::info!("Sysuser : {:?}", payload);
     let user = SysUser{
@@ -59,14 +51,12 @@ pub async fn user_list(Json(payload): Json<SysUser>) -> impl IntoResponse {
 }
 
 
-
+// curl localhost:8080/api/query_dict_page -X POST -d '{"page_no":1, "page_size":3}' --header "Content-Type: application/json"
 pub async fn query_dict_page(Json(item): Json<DictPageVO>) -> impl IntoResponse {
-    // let sys_dict = SysDict::select_page(&mut rb, &PageRequest::new(item.page_no.unwrap_or(1), item.page_size.unwrap_or(10))).await;
-    // let sys_dict =  APPLICATION_CONTEXT.sys_dict_service.page(&item).await;
+    let service = &APPLICATION_CONTEXT.service.sys_dict_service;
+    let sys_dict = service.page(&item).await;
 
-    let service_context = CONTEXT.get::<ServiceContext>();
-    let sys_dict = service_context.sys_dict_service.page(&item).await;
-
+    println!("----> {:?}", pool!());
     return Json(sys_dict);
 }
 
