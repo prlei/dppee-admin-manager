@@ -4,6 +4,7 @@ use axum::{Json, Router};
 use axum::extract::Path;
 use axum::response::IntoResponse;
 use axum::routing::{get, post};
+use log::info;
 use rbatis::rbdc::datetime::DateTime;
 
 use crate::CONTEXT;
@@ -30,6 +31,7 @@ pub async fn query_dict_by_id(Path(id): Path<String>) -> impl IntoResponse {
 
 // curl localhost:8080/api/query_dict -X POST --header "Content-Type: application/json" -d '{"code":"type"}'
 pub async fn query_dict(Json(item): Json<DictPageVO>) -> impl IntoResponse {
+    info!("user query params: {:?}", &item.code);
     let service_context = CONTEXT.get::<ServiceContext>();
     let sys_dict = service_context.sys_dict_service.find_dict(&item).await;
     return Json(sys_dict);

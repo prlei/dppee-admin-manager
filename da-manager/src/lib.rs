@@ -14,7 +14,6 @@ pub mod service;
 pub mod errors;
 pub mod utils;
 
-
 //----
 pub static CONTEXT: Container![Send + Sync] = <Container![Send + Sync]>::new();
 
@@ -23,15 +22,16 @@ pub struct AppState {
 }
 pub fn init_db() -> RBatis {
     let rb = RBatis::new();
-    rb.init(rbdc_mysql::driver::MysqlDriver {}, "mysql://root:rootroot@127.0.0.1:3306/dppee").unwrap();
+    let config = CONTEXT.get::<ApplicationConfig>();
+    rb.init(rbdc_mysql::driver::MysqlDriver {}, config.database_url()).unwrap();
     // let shared_state = CONTEXT.get::<Arc<AppState>>();
     return rb;
 }
 
 #[macro_export]
-macro_rules! pool {
+macro_rules! db_pool {
     () => {
-        &mut $crate::init_db()
+        &mut $crate::init_db().clone()
     };
 }
 
@@ -39,9 +39,11 @@ macro_rules! pool {
 pub async fn init_context() {
     //第一加载配置
     init_config().await;
-    //第二初始化数据源
-    init_database().await;
-    //第三配置service信息
+    //第二初始化log
+    init_log().await;
+    //第三初始化数据源
+    // init_database().await;
+    //第四配置service信息
     init_service().await;
 }
 
@@ -68,6 +70,11 @@ pub async fn get_server() -> String {
         config.server().port()
     );
     return server;
+}
+
+pub async fn init_log() {
+    // log4rs::init_file("src/config/log4rs.yaml", Default::default()).unwrap();
+    log4rs::init_file("log4rs.yaml", Default::default()).unwrap();
 }
 
 pub async fn init_service() {

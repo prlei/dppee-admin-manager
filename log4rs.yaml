@@ -1,0 +1,50 @@
+# 检查配置文件变动的时间间隔
+refresh_rate: 30 seconds
+# appender 负责将日志收集到控制台或文件，可配置多个
+appenders:
+  # 可以自定义命名
+  stdout:
+    kind: console
+    encoder:
+      pattern: "{d(%Y-%m-%d %H:%M:%S)} {h({l})} [{M}] - {m}{n}"
+  requests:
+    kind: file
+    path: "target/logs/requests.log"
+    encoder:
+      pattern: "{d(%Y-%m-%d %H:%M:%S)} [{f}:{L}] {h({l})} [{M}] - {m}{n}"
+  rolling_file:
+    kind: rolling_file
+    path: "target/log/rolling.log"
+    encoder:
+      #log 信息格式
+      pattern: "{d} {l} {M} :{m}{n}"
+    policy:
+      trigger:
+        kind: size
+        #限制文件大小
+        limit: 50kb
+      #新建文件并保存所有日志文件
+      roller:
+        kind: fixed_window
+        base: 1
+        count: 20
+        pattern: "target/log/rolling{}.log"
+  rolling_file_one:
+    kind: rolling_file
+    path: "target/log/rolling.log"
+    encoder:
+      #log 信息格式
+      pattern: "{d} {l} {M} :{m}{n}"
+    policy:
+      trigger:
+        kind: size
+        limit: 1024kb
+      #删除旧日志，存储新日志
+      roller:
+        kind: delete
+# 对全局log进行配置
+root:
+  level: debug
+  appenders:
+    - stdout
+    - requests
