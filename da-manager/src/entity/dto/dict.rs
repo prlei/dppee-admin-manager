@@ -1,4 +1,4 @@
-use crate::entity::sys_entity::SysDict;
+use crate::entity::dict_entity::SysDict;
 
 #[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct SysDictDTO {

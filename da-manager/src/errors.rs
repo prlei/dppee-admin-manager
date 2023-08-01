@@ -1,13 +1,15 @@
 //! Errorand Result types.
 use std::error::Error as StdError;
+use std::error::Error as AppStdError;
 use std::fmt::{self, Debug, Display};
 use std::io;
 
+use serde::{Deserialize, Deserializer};
 use serde::de::Visitor;
 use serde::ser::{Serialize, Serializer};
-use serde::{Deserialize, Deserializer};
 
 pub type Result<T> = std::result::Result<T, Error>;
+pub type AppResult<T> = std::result::Result<T, Error>;
 
 /// A generic error that represents all the ways a method can fail inside of rexpr::core.
 #[derive(Debug)]

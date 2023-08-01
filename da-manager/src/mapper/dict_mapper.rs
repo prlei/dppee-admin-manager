@@ -1,5 +1,5 @@
 use rbatis::{crud, impl_select_page};
-use crate::entity::sys_entity::SysDict;
+use crate::entity::dict_entity::SysDict;
 
 crud!(SysDict {});
 impl_select_page!(SysDict{select_page() =>"

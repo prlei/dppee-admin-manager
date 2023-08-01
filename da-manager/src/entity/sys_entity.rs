@@ -9,7 +9,7 @@ pub struct SysUser {
     pub username: Option<String>,
     pub gender: Option<i32>,
     pub email: Option<String>,
-    pub status_id: Option<i32>,
+    pub status: Option<i32>,
     pub sort: Option<i32>,
     pub user_no: Option<usize>,
     pub mobile: Option<String>,
@@ -34,33 +34,4 @@ pub struct SysUserQuery {
     pub limit: Option<u64>,
     pub order: Option<String>,
     pub order_field: Option<String>,
-}
-
-#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
-pub struct SysDict {
-    pub id: Option<String>,
-    pub name: Option<String>,
-    pub code: Option<String>,
-    pub state: Option<i32>,
-    pub create_date: Option<DateTime>,
-}
-
-#[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct DictEditDTO {
-    pub id: Option<String>,
-    pub name: Option<String>,
-    pub code: Option<String>,
-    pub state: Option<i32>,
-}
-
-impl From<&DictEditDTO> for SysDict {
-    fn from(arg: &DictEditDTO) -> Self {
-        SysDict {
-            id: arg.id.clone(),
-            name: arg.name.clone(),
-            code: arg.code.clone(),
-            state: arg.state.clone(),
-            create_date: None,
-        }
-    }
 }
