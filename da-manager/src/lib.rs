@@ -1,6 +1,7 @@
 use std::sync::Arc;
 
 use rbatis::RBatis;
+use rbdc_mysql::driver::MysqlDriver;
 use state::Container;
 use tokio::fs::read_to_string;
 
@@ -20,13 +21,14 @@ pub static CONTEXT: Container![Send + Sync] = <Container![Send + Sync]>::new();
 pub struct AppState {
     pub batis: RBatis,
 }
+
 pub fn init_db() -> RBatis {
     let rb = RBatis::new();
     let config = CONTEXT.get::<ApplicationConfig>();
-    rb.init(rbdc_mysql::driver::MysqlDriver {}, config.database_url()).unwrap();
-    // let shared_state = CONTEXT.get::<Arc<AppState>>();
+    rb.init(MysqlDriver {}, config.database_url()).unwrap();
     return rb;
 }
+
 
 #[macro_export]
 macro_rules! db_pool {

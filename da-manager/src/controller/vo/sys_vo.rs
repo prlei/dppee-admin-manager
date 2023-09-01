@@ -8,6 +8,12 @@ pub struct UserLoginVO {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct UserLoginData {
+    pub mobile: String,
+    pub token: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct SignInVO {
     pub inner: SysUser,
     pub permissions: Vec<String>,

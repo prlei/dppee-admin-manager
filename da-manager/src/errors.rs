@@ -1,6 +1,5 @@
 //! Errorand Result types.
 use std::error::Error as StdError;
-use std::error::Error as AppStdError;
 use std::fmt::{self, Debug, Display};
 use std::io;
 

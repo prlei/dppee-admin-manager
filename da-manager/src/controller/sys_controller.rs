@@ -15,5 +15,4 @@ pub async fn login(Json(item): Json<UserLoginVO>) -> impl IntoResponse {
     ResultBody::from_result(&result).resp_json()
 }
 
-
 // sys end
